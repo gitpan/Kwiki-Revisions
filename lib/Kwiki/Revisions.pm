@@ -2,12 +2,11 @@ package Kwiki::Revisions;
 use strict;
 use warnings;
 use Kwiki::Plugin '-Base';
-use Kwiki::Installer '-base';
-our $VERSION = '0.10';
+use mixin 'Kwiki::Installer';
+our $VERSION = '0.11';
 
 const class_id => 'revisions';
 const class_title => 'Revisions';
-const screen_template => 'revisions_screen.html';
 const cgi_class => 'Kwiki::Revisions::CGI';
 field revision_id => 0;
 
@@ -41,6 +40,7 @@ sub revisions {
     $page->metadata->edit_unixtime($metadata->{edit_unixtime});
     $self->page($page);
     $self->render_screen(
+        screen_title => $page->id,
         page_html => $page->to_html,
         revision_id => $revision_id,
         revision_top => $page->revision_number,
@@ -124,13 +124,11 @@ __template/tt2/revisions_controls_previous_icon.html__
 <!-- BEGIN revisions_controls_previous_icon.html -->
 Previous
 <!-- END revisions_controls_previous_icon.html -->
-__template/tt2/revisions_screen.html__
-<!-- BEGIN revisions_screen.html -->
+__template/tt2/revisions_content.html__
+<!-- BEGIN revisions_content.html -->
 [% screen_title = "$page_id <span style=\"font-size:smaller;color:red\">(Revision $revision_id)</span>" -%]
-[% INCLUDE kwiki_layout_begin.html %]
 [% INCLUDE display_changed_by.html %]
 <div class="wiki">
 [% page_html -%]
 </div>
-[% INCLUDE kwiki_layout_end.html %]
-<!-- END revisions_screen.html -->
+<!-- END revisions_content.html -->
