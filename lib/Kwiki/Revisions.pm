@@ -1,7 +1,7 @@
 package Kwiki::Revisions;
 use Kwiki::Plugin -Base;
 use mixin 'Kwiki::Installer';
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 const class_id => 'revisions';
 const cgi_class => 'Kwiki::Revisions::CGI';
@@ -37,7 +37,7 @@ sub toolbar_params {
     $revision_id = $revisions->[-$revision_id] if ($revision_id < 0);
     $self->revision_id($revision_id);
 
-    my $archive = $self->hub->load_class('archive');
+    my $archive = $self->hub->archive;
     $page->content($archive->fetch($page, $revision_id));
     my $page_title = $page->title;
     my $screen_title = "$page_title <span style=\"font-size:smaller;color:red\">(Revision $revision_id)</span>";
@@ -99,7 +99,7 @@ See http://www.perl.com/perl/misc/Artistic.html
 
 =cut
 __template/tt2/revisions_button.html__
-[% revisions = hub.load_class('archive').show_revisions %]
+[% revisions = hub.archive.show_revisions %]
 [% IF revisions %]
 <a href="[% script_name %]?action=revisions&page_name=[% page_uri %]&revision_id=-1" accesskey="r" title="[% IF revisions > 1 %][% revisions %] Revisions[% ELSE %]Previous Revision[% END %]">
 [% INCLUDE revisions_button_icon.html %]
