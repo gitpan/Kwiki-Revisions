@@ -1,17 +1,15 @@
 package Kwiki::Revisions;
-use strict;
-use warnings;
-use Kwiki::Plugin '-Base';
+use Kwiki::Plugin -Base;
 use mixin 'Kwiki::Installer';
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 const class_id => 'revisions';
-const class_title => 'Revisions';
 const cgi_class => 'Kwiki::Revisions::CGI';
 field revision_id => 0;
 
 sub register {
     my $registry = shift;
+    $registry->add(prerequisite => 'archive');
     $registry->add(action => 'revisions');
     $registry->add(toolbar => 'revisions_button', 
                    template => 'revisions_button.html',
@@ -71,11 +69,9 @@ sub toolbar_params {
 }
 
 package Kwiki::Revisions::CGI;
-use Kwiki::CGI '-base';
+use Kwiki::CGI -base;
 
 cgi 'revision_id';
-
-1;
 
 package Kwiki::Revisions;
 __DATA__
@@ -103,47 +99,36 @@ See http://www.perl.com/perl/misc/Artistic.html
 
 =cut
 __template/tt2/revisions_button.html__
-<!-- BEGIN revisions_button.html -->
-<a href="[% script_name %]?action=revisions&page_id=[% page_id %]&revision_id=-1" accesskey="r" title="Previous Revision">
+[% revisions = hub.load_class('archive').show_revisions %]
+[% IF revisions %]
+<a href="[% script_name %]?action=revisions&page_name=[% page_uri %]&revision_id=-1" accesskey="r" title="[% IF revisions > 1 %][% revisions %] Revisions[% ELSE %]Previous Revision[% END %]">
 [% INCLUDE revisions_button_icon.html %]
 </a>
-<!-- END revisions_button.html -->
+[% END %]
 __template/tt2/revisions_button_icon.html__
-<!-- BEGIN revisions_button_icon.html -->
 Revisions
-<!-- END revisions_button_icon.html -->
 __template/tt2/revisions_controls.html__
-<!-- BEGIN revisions_controls.html -->
 [% IF previous_id -%]
-<a href="[% script_name %]?action=revisions&page_id=[% page_uri %]&revision_id=[% previous_id %]" accesskey="p" title="Previous Revision">
+<a href="[% script_name %]?action=revisions&page_name=[% page_uri %]&revision_id=[% previous_id %]" accesskey="p" title="Previous Revision">
 [% INCLUDE revisions_controls_previous_icon.html %]
-</a> | 
+</a> &nbsp; 
 [% END -%]
 <a href="[% script_name %]?[% page_uri %]" accesskey="c" title="Current Revision">
 [% INCLUDE revisions_controls_current_icon.html %]
 </a>
 [% IF next_id -%]
- | <a href="[% script_name %]?action=revisions&page_id=[% page_uri %]&revision_id=[% next_id %]" accesskey="n" title="Next Revision">
+ &nbsp; <a href="[% script_name %]?action=revisions&page_name=[% page_uri %]&revision_id=[% next_id %]" accesskey="n" title="Next Revision">
 [% INCLUDE revisions_controls_next_icon.html %]
 </a>
 [% END -%]
-<!-- END revisions_controls.html -->
 __template/tt2/revisions_controls_current_icon.html__
-<!-- BEGIN revisions_controls_current_icon.html -->
 Current
-<!-- END revisions_controls_current_icon.html -->
 __template/tt2/revisions_controls_next_icon.html__
-<!-- BEGIN revisions_controls_next_icon.html -->
 Next
-<!-- END revisions_controls_next_icon.html -->
 __template/tt2/revisions_controls_previous_icon.html__
-<!-- BEGIN revisions_controls_previous_icon.html -->
 Previous
-<!-- END revisions_controls_previous_icon.html -->
 __template/tt2/revisions_content.html__
-<!-- BEGIN revisions_content.html -->
 [% INCLUDE display_changed_by.html %]
 <div class="wiki">
 [% page_html -%]
 </div>
-<!-- END revisions_content.html -->
