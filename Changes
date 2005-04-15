@@ -1,4 +1,9 @@
 ---
+version: 0.15
+date:    Fri Apr 15 11:29:14 PDT 2005
+changes:
+- eliminate use_class
+---
 version: 0.14
 date:    Tue Jan 11 08:12:05 PST 2005
 changes:

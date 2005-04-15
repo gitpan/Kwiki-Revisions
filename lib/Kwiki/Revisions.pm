@@ -1,7 +1,7 @@
 package Kwiki::Revisions;
 use Kwiki::Plugin -Base;
 use mixin 'Kwiki::Installer';
-our $VERSION = '0.14';
+our $VERSION = '0.15';
 
 const class_id => 'revisions';
 const cgi_class => 'Kwiki::Revisions::CGI';
@@ -27,7 +27,6 @@ sub revisions {
 }
 
 sub toolbar_params {
-    $self->use_class('archive');
     my $page = $self->pages->current;
     $page->load;
     my $revision_id = $self->cgi->revision_id
